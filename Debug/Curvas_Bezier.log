@@ -1,0 +1,3 @@
+﻿  curvas.cpp
+C:\Users\Sal\source\repos\Curvas_Bezier\Curvas_Bezier\curvas.cpp(67,27): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  Curvas_Bezier.vcxproj -> C:\Users\Sal\source\repos\Curvas_Bezier\Debug\Curvas_Bezier.exe
