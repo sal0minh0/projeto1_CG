@@ -6,7 +6,11 @@
 
 ### _Projeto em `OpenGL` sobre Curvas de Bézier na disciplina da Universidade: `Computação Gráfica`_
 
+<div align="center">
+
 <img src="assets/image.png" alt="O Inseto">
+
+</div>
 
 <div align="center">
 
@@ -47,13 +51,3 @@
 |         `"v"`         |         `"c"`         |              `"t/r/s"`               |
 | :-------------------: | :-------------------: | :----------------------------------: |
 | Coordenadas de pontos | Inicia uma nova curva | Define as transformações geométricas |
-
-<style>
-img {
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-      height: auto;
-      width: auto;
-    }
-</style>
