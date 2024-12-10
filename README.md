@@ -8,8 +8,6 @@
 
 <img src="assets/image.png" alt="O Inseto">
 
-<div align="center">
-
 <style>
 img {
       display: block;
@@ -19,6 +17,8 @@ img {
       width: auto;
     }
 </style>
+
+<div align="center">
 
 ## 👁️Tutorial Para Visualizar
 
