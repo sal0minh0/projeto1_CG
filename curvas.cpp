@@ -1,4 +1,3 @@
-#include <GL/glut.h>
 #include <vector>
 #include <fstream>
 #include <sstream>
@@ -6,6 +5,10 @@
 #include <cmath>
 #define _USE_MATH_DEFINES 
 #include <math.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <GL/glut.h>
+#include <emscripten/emscripten.h>
 
 // Estrutura para ponto 2D
 struct Pontos {
@@ -13,18 +16,18 @@ struct Pontos {
     Pontos(float x = 0, float y = 0) : x(x), y(y) {}
 };
 
-// Estrutura para transformação
+// Estrutura para transformaï¿½ï¿½o
 struct Transformacao {
-    char tipo;   // 't' para translação, 'r' para rotação, 's' para escala
-    float param[3];  // [x, y] para translação e escala, [angulo, px, py] para rotação
+    char tipo;   // 't' para translaï¿½ï¿½o, 'r' para rotaï¿½ï¿½o, 's' para escala
+    float param[3];  // [x, y] para translaï¿½ï¿½o e escala, [angulo, px, py] para rotaï¿½ï¿½o
 };
 
-// Variáveis globais
+// Variï¿½veis globais
 std::vector<std::vector<Pontos>> CURVAs;  // Lista de curvas (cada curva tem seus pontos de controle)
-std::vector<Transformacao> transforms;  // Lista de transformações
-bool mostrarPoligono = false;  // Controle para exibir/ocultar polígono de controle
-int atualTransform = -1;  // Índice da transformação atual
-std::vector<std::vector<Pontos>> originalCURVAs;  // Cópia das curvas originais
+std::vector<Transformacao> transforms;  // Lista de transformaï¿½ï¿½es
+bool mostrarPoligono = false;  // Controle para exibir/ocultar polï¿½gono de controle
+int atualTransform = -1;  // ï¿½ndice da transformaï¿½ï¿½o atual
+std::vector<std::vector<Pontos>> originalCURVAs;  // Cï¿½pia das curvas originais
 
 // Cores
 const float COR_EIXO_X[] = { 0.0f, 1.0f, 0.0f };  // Verde
@@ -33,7 +36,7 @@ const float COR_CURVA[] = { 1.0f, 0.0f, 0.0f };   // Vermelho
 const float COR_ORIGINAL[] = { 0.5f, 0.5f, 0.5f }; // Cinza
 const float COR_PONTOS_CONTROLE[] = { 1.0f, 1.0f, 0.0f };  // Amarelo
 
-// Função para calcular ponto na curva de Bézier usando o algoritmo de De Casteljau
+// Funï¿½ï¿½o para calcular ponto na curva de Bï¿½zier usando o algoritmo de De Casteljau
 Pontos calcularPontosBezier(const std::vector<Pontos>& controlePontos, float t) {
     std::vector<Pontos> pontos = controlePontos;
     int n = pontos.size();
@@ -48,29 +51,29 @@ Pontos calcularPontosBezier(const std::vector<Pontos>& controlePontos, float t) 
     return pontos[0];
 }
 
-// Aplicar transformação aos pontos
+// Aplicar transformaï¿½ï¿½o aos pontos
 void aplicarTransformacao(std::vector<std::vector<Pontos>>& CURVAs, const Transformacao& transform) {
     for (auto& CURVA : CURVAs) {
         for (auto& ponto : CURVA) {
             switch (transform.tipo) {
-            case 't':  // Translação
+            case 't':  // Translaï¿½ï¿½o
                 ponto.x += transform.param[0];
                 ponto.y += transform.param[1];
                 break;
 
-            case 'r': { // Rotação em torno de um ponto
+            case 'r': { // Rotaï¿½ï¿½o em torno de um ponto
                 float angulo = transform.param[0];
-                float px = transform.param[1];  // Ponto de rotação x
-                float py = transform.param[2];  // Ponto de rotação y
+                float px = transform.param[1];  // Ponto de rotaï¿½ï¿½o x
+                float py = transform.param[2];  // Ponto de rotaï¿½ï¿½o y
 
-                // Converter ângulo para radianos
+                // Converter ï¿½ngulo para radianos
                 float rad = angulo * M_PI / 180.0f;
 
-                // Translação para origem do ponto de rotação
+                // Translaï¿½ï¿½o para origem do ponto de rotaï¿½ï¿½o
                 float dx = ponto.x - px;
                 float dy = ponto.y - py;
 
-                // Aplicar rotação
+                // Aplicar rotaï¿½ï¿½o
                 ponto.x = px + (dx * cos(rad) - dy * sin(rad));
                 ponto.y = py + (dx * sin(rad) + dy * cos(rad));
                 break;
@@ -80,7 +83,7 @@ void aplicarTransformacao(std::vector<std::vector<Pontos>>& CURVAs, const Transf
                 float sx = transform.param[0];  // Fator de escala x
                 float sy = transform.param[1];  // Fator de escala y
 
-                // Aplicar escala em relação à origem
+                // Aplicar escala em relaï¿½ï¿½o ï¿½ origem
                 ponto.x *= sx;
                 ponto.y *= sy;
                 break;
@@ -90,7 +93,7 @@ void aplicarTransformacao(std::vector<std::vector<Pontos>>& CURVAs, const Transf
     }
 }
 
-// Função para desenhar o plano cartesiano
+// Funï¿½ï¿½o para desenhar o plano cartesiano
 void desenharEixos() {
     glBegin(GL_LINES);
 
@@ -107,7 +110,7 @@ void desenharEixos() {
     glEnd();
 }
 
-// Função para desenhar uma curva de Bézier
+// Funï¿½ï¿½o para desenhar uma curva de Bï¿½zier
 void desenharCurvaBezier(const std::vector<Pontos>& controlePontos, const float COR[3]) {
     glColor3fv(COR);
     glBegin(GL_LINE_STRIP);
@@ -119,7 +122,7 @@ void desenharCurvaBezier(const std::vector<Pontos>& controlePontos, const float 
 
     glEnd();
 
-    // Desenhar polígono de controle se necessário
+    // Desenhar polï¿½gono de controle se necessï¿½rio
     if (mostrarPoligono) {
         glColor3fv(COR_PONTOS_CONTROLE);
         glBegin(GL_LINE_STRIP);
@@ -138,14 +141,14 @@ void desenharCurvaBezier(const std::vector<Pontos>& controlePontos, const float 
     }
 }
 
-// Função do display
+// Funï¿½ï¿½o do display
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     // Desenhar eixos
     desenharEixos();
 
-    // Desenhar curva original em cinza se houver transformação aplicada
+    // Desenhar curva original em cinza se houver transformaï¿½ï¿½o aplicada
     if (atualTransform >= 0) {
         for (const auto& CURVA : originalCURVAs) {
             desenharCurvaBezier(CURVA, COR_ORIGINAL);
@@ -160,13 +163,13 @@ void display() {
     glutSwapBuffers();
 }
 
-// Função de reshape
+// Funï¿½ï¿½o de reshape
 void remodelar(int w, int h) {
     glViewport(0, 0, w, h);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
-    // Manter proporção 
+    // Manter proporï¿½ï¿½o 
     float proporcao = (float)w / h;
     if (w <= h) {
         glOrtho(-100.0, 100.0, -100.0 / proporcao, 100.0 / proporcao, -1.0, 1.0);
@@ -178,7 +181,7 @@ void remodelar(int w, int h) {
     glMatrixMode(GL_MODELVIEW);
 }
 
-// Função de teclado
+// Funï¿½ï¿½o de teclado
 void teclado(unsigned char chave, int x, int y) {
     switch (chave) {
     case 'p':
@@ -186,25 +189,25 @@ void teclado(unsigned char chave, int x, int y) {
         mostrarPoligono = !mostrarPoligono;
         break;
 
-    case ' ':  // Barra de espaço
+    case ' ':  // Barra de espaï¿½o
         if (atualTransform < (int)transforms.size() - 1) {
             atualTransform++;
-            CURVAs = originalCURVAs;  // Resetar para posição original
+            CURVAs = originalCURVAs;  // Resetar para posiï¿½ï¿½o original
 
-            // Aplicar todas as transformações até a atual
+            // Aplicar todas as transformaï¿½ï¿½es atï¿½ a atual
             for (int i = 0; i <= atualTransform; i++) {
                 aplicarTransformacao(CURVAs, transforms[i]);
             }
         }
         else {
             atualTransform = -1;
-            CURVAs = originalCURVAs;  // Voltar para posição original
+            CURVAs = originalCURVAs;  // Voltar para posiï¿½ï¿½o original
         }
         break;
 
-    case 'q': // Botão "q" ou "Q" para sair 
+    case 'q': // Botï¿½o "q" ou "Q" para sair 
     case 'Q':
-    case 27:  // Botão ESC para sair também
+    case 27:  // Botï¿½o ESC para sair tambï¿½m
         exit(0);
         break;
     }
@@ -212,7 +215,7 @@ void teclado(unsigned char chave, int x, int y) {
     glutPostRedisplay();
 }
 
-// Função para carregar arquivo .obj
+// Funï¿½ï¿½o para carregar arquivo .obj
 bool loadObjFile(const char* filename) {
     std::ifstream file(filename);
     if (!file.is_open()) {
@@ -231,7 +234,7 @@ bool loadObjFile(const char* filename) {
         char tipo;
         iss >> tipo;
 
-        if (tipo == 'v') {  // Vértice
+        if (tipo == 'v') {  // Vï¿½rtice
             float x, y;
             if (iss >> x >> y) {
                 atualCURVA.push_back(Pontos(x, y));
@@ -243,7 +246,7 @@ bool loadObjFile(const char* filename) {
                 atualCURVA.clear();
             }
         }
-        else if (tipo == 't' || tipo == 'r' || tipo == 's') {  // Transformação
+        else if (tipo == 't' || tipo == 'r' || tipo == 's') {  // Transformaï¿½ï¿½o
             Transformacao transform;
             transform.tipo = tipo;
 
@@ -277,12 +280,12 @@ bool loadObjFile(const char* filename) {
         }
     }
 
-    // Adicionar última curva se houver
+    // Adicionar ï¿½ltima curva se houver
     if (!atualCURVA.empty()) {
         CURVAs.push_back(atualCURVA);
     }
 
-    // Fazer cópia das curvas originais
+    // Fazer cï¿½pia das curvas originais
     originalCURVAs = CURVAs;
 
     file.close();
@@ -290,23 +293,18 @@ bool loadObjFile(const char* filename) {
 }
 
 int main(int argc, char** argv) {
-    if (argc < 2) {
-        printf("Uso: %s arquivo.obj\n", argv[0]);
-        return 1;
-    }
-
     // Inicializar GLUT
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
     glutInitWindowSize(640, 480);
-    glutCreateWindow("Visualizador de Curvas de Bézier");
+    glutCreateWindow("Visualizador de Curvas de BÃ©zier");
 
     // Configurar cor de fundo
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);  // Fundo preto
 
     // Carregar arquivo .obj
-    if (!loadObjFile(argv[1])) {
-        printf("Erro ao carregar esse arquivo %s\n", argv[1]);
+    if (!loadObjFile("arquivo.obj")) {
+        printf("Erro ao carregar esse arquivo arquivo.obj\n");
         return 1;
     }
 
@@ -315,8 +313,8 @@ int main(int argc, char** argv) {
     glutReshapeFunc(remodelar);
     glutKeyboardFunc(teclado);
 
-    // Iniciar loop principal
-    glutMainLoop();
+    // Iniciar loop principal usando Emscripten
+    emscripten_set_main_loop(glutMainLoop, 0, 1);
 
     return 0;
 }
