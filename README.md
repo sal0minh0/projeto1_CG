@@ -8,16 +8,6 @@
 
 <img src="assets/image.png" alt="O Inseto">
 
-<style>
-img {
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-      height: auto;
-      width: auto;
-    }
-</style>
-
 <div align="center">
 
 ## 👁️Tutorial Para Visualizar
@@ -57,3 +47,13 @@ img {
 |         `"v"`         |         `"c"`         |              `"t/r/s"`               |
 | :-------------------: | :-------------------: | :----------------------------------: |
 | Coordenadas de pontos | Inicia uma nova curva | Define as transformações geométricas |
+
+<style>
+img {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      height: auto;
+      width: auto;
+    }
+</style>
