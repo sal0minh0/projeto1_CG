@@ -6,9 +6,19 @@
 
 ### _Projeto em `OpenGL` sobre Curvas de Bézier na disciplina da Universidade: `Computação Gráfica`_
 
-<img src="assets/image.png" alt="O Inseto" height="auto" width="auto" align="center">
+<img src="assets/image.png" alt="O Inseto">
 
 <div align="center">
+
+<style>
+img {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      height: auto;
+      width: auto;
+    }
+</style>
 
 ## 👁️Tutorial Para Visualizar
 
@@ -26,7 +36,7 @@
 
 </div>
 
-- **_É um visualizador interativo de curvas de Bézier_** 📈 <br> 
+- **_É um visualizador interativo de curvas de Bézier_** 📈 <br>
 - **_Feito em [C ++](https://cplusplus.com/)_** 👨‍💻 <br>
 - **_Usando [OpenGL ES 3.0](https://www.khronos.org/opengles/) com [GLFW](https://www.glfw.org/) e [Emscripten](https://emscripten.org) (Para versão Web)._** 🪟
 
